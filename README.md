@@ -1,4 +1,4 @@
-# Kardan
+# Git CI
 
 > Simple git-based CI tool, as Unixy as it can get.
 
