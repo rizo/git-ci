@@ -13,7 +13,6 @@ The entire work is done in 33 LOC of shell code!
 ## Instructions
 
 1. Clone this repository on the machine where the builds will run.
-  - `$ git clone https://github.com/rizo/git-ci ~/path/to/git-ci`
 2. Add your build intructions to the makefile under the `ci` action.
 2. Run `make enable-git-ci`.
 3. Clone this repository on you local machine.
