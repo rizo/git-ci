@@ -1,6 +1,6 @@
 # Git CI
 
-> Simple git-based CI tool, as Unixy as it can get.
+> Simple git-based CI tool for automated builds, as Unixy as it can get.
 
 The build process is directly integrated with the git's ability to add action hooks. In particular by running `make enable-git-build` a `post-receive` hook is enabled, which is run by git whenever some clone pushes to the remote. The actual build process is delegated to `make`, the `make build` action is invoked every time the hook is fired.
 
