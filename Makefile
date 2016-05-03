@@ -1,6 +1,4 @@
 
-EXPORT_DIR=./export
-
 help:
 	@echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 	@echo
@@ -11,11 +9,11 @@ help:
 
 enable-git-build:
 	git config --bool core.bare true
-	cp builder/scripts/post-receive .git/hooks/
+	cp ./scripts/post-receive ./.git/hooks/
 
 disable-git-build:
 	git config --bool core.bare false
-	rm .git/hooks/post-receive
+	rm ./.git/hooks/post-receive
 
 
 
