@@ -31,7 +31,7 @@ START_TIME=`date +%s`
 # =-=- BEGIN BUILD -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 sleep 3
-make -C $PROJECT_PATH help
+# make -C $PROJECT_PATH help
 
 # =-=- END BUILD -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 END_TIME=`date +%s`
