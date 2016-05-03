@@ -22,7 +22,7 @@ if [ -x "$BUILD_SCRIPT" ]; then
 
 		# Close stdandard output pipes and run $SCRIPT in background.
 		# Allows the remote to continue the build process independently.
-    exec $BUILD_SCRIPT >&- 2>&- &
+    exec $BUILD_SCRIPT 1>&- 2>&- &
 else
 		# Curse the human.
     echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
