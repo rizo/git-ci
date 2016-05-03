@@ -1,32 +1,26 @@
 #!/bin/sh
 
+# This script starts the build process on post-receieve git hook.
+# The $GIT_DIR is set by Git before executing the hook.
+
+if [ -z $GIT_DIR ]; then
+  log "error: \$GIT_DIR is not set"
+  log "this script should only be run as a git hook"
+  exit 1
+else
+  ROOT="$GIT_DIR/.."
+fi
+
 function log() {
   echo "$(date -u +%Y-%m-%d_%TZ) kardan: $1"
 }
 
-# Main build process: prepares the build tree, redirects stdour and stderr to
-# logs and asks make to build.
 function build {
-  # Prepare the build tree.
-  BUILD_PATH=$PROJECT_PATH/build
-  mkdir -p $BUILD_PATH/bin
-  mkdir -p $BUILD_PATH/lib
-  mkdir -p $BUILD_PATH/log
-
-  # Redirect stdout and stderr to logs.
-  TODAY=`date -u +"%Y-%m-%d"`
-  STDOUT_LOG="$BUILD_PATH/log/kardan-${TODAY}-stdout.log"
-  STDERR_LOG="$BUILD_PATH/log/kardan-${TODAY}-stderr.log"
-  log "stdout: $STDOUT_LOG"
-  log "stderr: $STDERR_LOG"
-  exec 1>> $STDOUT_LOG
-  exec 2>> $STDERR_LOG
-
   log "building..."
   START_TIME=`date +%s`
 
   sleep 3
-  make -C $PROJECT_PATH
+  make -C $ROOT
 
   END_TIME=`date +%s`
   log "build finished, took $((END_TIME - START_TIME)) seconds"
@@ -34,26 +28,21 @@ function build {
   log "=^~^= ´"
 }
 
-# This script starts the build process on post-receieve git hook.
-# The $GIT_DIR is set by Git before executing the hook and the
-# relative $PROJECT_PATH variable is exported to be used by build.sh.
-
-if [ -z $GIT_DIR ]; then
-  log "error: \$GIT_DIR is not set"
-  log "this script should only be run as a git hook"
-  exit 1
-fi
-
-PROJECT_PATH="$GIT_DIR/.."
-
-echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "=-=- Kardan CI -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "starting the build process..."
 echo "waking up the ceiling kitten to fulfill your request..."
-echo "     < Howdy, you heirless piece of human flesh! >"
+echo "     < Howdy, you hairless piece of human flesh! >"
 echo "=^~^= ´"
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
-# Close stdandard output pipes and run `build` in background.
-# Allows the remote to continue the build process independently.
+# Setup logging.
+TODAY=`date -u +"%Y-%m-%d"`
+mkdir -p $ROOT/build/log
+STDOUT_LOG="$ROOT/build/log/kardan-${TODAY}-stdout.log"
+STDERR_LOG="$ROOT/build/log/kardan-${TODAY}-stderr.log"
+exec 1>> $STDOUT_LOG
+exec 2>> $STDERR_LOG
+
+# Finnaly run the build function.
 build &
 
