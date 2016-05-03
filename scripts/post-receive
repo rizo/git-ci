@@ -3,6 +3,10 @@
 # This script starts the build process on post-receieve git hook.
 # The $GIT_DIR is set by Git before executing the hook.
 
+function log() {
+  echo "$(date -u +%Y-%m-%d_%TZ) git-ci: $1"
+}
+
 if [ -z $GIT_DIR ]; then
   log "error: \$GIT_DIR is not set"
   log "this script should only be run as a git hook"
@@ -11,17 +15,10 @@ else
   ROOT="$GIT_DIR/.."
 fi
 
-function log() {
-  echo "$(date -u +%Y-%m-%d_%TZ) git-ci: $1"
-}
-
 function build {
   log "building..."
   START_TIME=`date +%s`
-
-  sleep 3
-  make -C $ROOT
-
+  make -C $ROOT build
   END_TIME=`date +%s`
   log "build finished, took $((END_TIME - START_TIME)) seconds"
   log "     < Your disgusting human food is ready, sir! >"
@@ -45,4 +42,3 @@ exec 2>> $STDERR_LOG
 
 # Finnaly run the build function.
 build &
-
