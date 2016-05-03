@@ -12,7 +12,7 @@ else
 fi
 
 function log() {
-  echo "$(date -u +%Y-%m-%d_%TZ) kardan: $1"
+  echo "$(date -u +%Y-%m-%d_%TZ) git-ci: $1"
 }
 
 function build {
@@ -28,7 +28,7 @@ function build {
   log "=^~^= ´"
 }
 
-echo "=-=- Kardan CI -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "=-=- Git CI =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "starting the build process..."
 echo "waking up the ceiling kitten to fulfill your request..."
 echo "     < Howdy, you hairless piece of human flesh! >"
