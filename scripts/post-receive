@@ -27,7 +27,6 @@ else
 		# Curse the human.
     echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     echo "kardan: error: build script not found"
-    echo "kardan: \$PROJECT_PATH = $PROJECT_PATH"
 		echo "kardan: \$BUILD_SCRIPT = $BUILD_SCRIPT"
     echo "kardan: the ceiling kitten will curse you for waking it up!"
     echo "kardan:      < Grrr! I'll kill you in your sleep! >"
