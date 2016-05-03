@@ -15,7 +15,6 @@ BUILD_SCRIPT=$PROJECT_PATH/scripts/build.sh
 if [ -x "$BUILD_SCRIPT" ]; then
     echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     echo "kardan: starting the build process..."
-    echo "kardan: \$PROJECT_PATH = $PROJECT_PATH"
     echo "kardan: waking up the ceiling kitten to fulfill your request..."
     echo "kardan:      < Howdy, you heirless piece of human flesh! >"
     echo "kardan: =^~^= ´"
