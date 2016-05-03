@@ -4,7 +4,7 @@
 
 The build process is directly integrated with the git's ability to add action hooks. In particular by running `make enable-git-build` a `post-receive` hook is enabled, which is run by git whenever some clone pushes to the remote. The actual build process is delegated to `make`, the `make build` action is invoked every time the hook is fired.
 
-**TL;DR**: Add whatever you wish to the `make build` action and it will be run.
+**TL;DR**: Add whatever you wish to the `make build` action and it will run.
 
 During the execution all the output is saved in `build/log` directory.
 
