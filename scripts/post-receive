@@ -18,7 +18,7 @@ fi
 function build {
   log "building..."
   START_TIME=`date +%s`
-  make -C $ROOT build
+  make -C $ROOT ci
   END_TIME=`date +%s`
   log "build finished, took $((END_TIME - START_TIME)) seconds"
   log "     < Your disgusting human food is ready, sir! >"
