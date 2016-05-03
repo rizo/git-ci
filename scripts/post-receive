@@ -46,17 +46,6 @@ fi
 
 PROJECT_PATH="$GIT_DIR/.."
 
-if [ ! -x "$BUILD_SCRIPT" ]; then
-  echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "error: build script not found"
-  echo "\$BUILD_SCRIPT = $BUILD_SCRIPT"
-  echo "the ceiling kitten will curse you for waking it up!"
-  echo "     < Grrr! I'll kill you in your sleep! >"
-  echo "=^~^= ´"
-  echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  exit 2
-fi
-
 echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "starting the build process..."
 echo "waking up the ceiling kitten to fulfill your request..."
