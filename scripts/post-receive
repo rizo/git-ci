@@ -1,37 +1,70 @@
 #!/bin/sh
 
+function log() {
+  echo "$(date -u +%Y-%m-%d_%TZ) kardan: $1"
+}
+
+# Main build process: prepares the build tree, redirects stdour and stderr to
+# logs and asks make to build.
+function build {
+  # Prepare the build tree.
+  BUILD_PATH=$PROJECT_PATH/build
+  mkdir -p $BUILD_PATH/bin
+  mkdir -p $BUILD_PATH/lib
+  mkdir -p $BUILD_PATH/log
+
+  # Redirect stdout and stderr to logs.
+  TODAY=`date -u +"%Y-%m-%d"`
+  STDOUT_LOG="$BUILD_PATH/log/kardan-${TODAY}-stdout.log"
+  STDERR_LOG="$BUILD_PATH/log/kardan-${TODAY}-stderr.log"
+  log "stdout: $STDOUT_LOG"
+  log "stderr: $STDERR_LOG"
+  exec 1>> $STDOUT_LOG
+  exec 2>> $STDERR_LOG
+
+  log "building..."
+  START_TIME=`date +%s`
+
+  sleep 3
+  make -C $PROJECT_PATH
+
+  END_TIME=`date +%s`
+  log "build finished, took $((END_TIME - START_TIME)) seconds"
+  log "     < Your disgusting human food is ready, sir! >"
+  log "=^~^= ´"
+}
+
 # This script starts the build process on post-receieve git hook.
 # The $GIT_DIR is set by Git before executing the hook and the
 # relative $PROJECT_PATH variable is exported to be used by build.sh.
 
 if [ -z $GIT_DIR ]; then
-	  echo "kardan: error: \$GIT_DIR is not set"
-	  echo "kardan: this script should only be run as a git hook"
-	  exit 1
+  log "error: \$GIT_DIR is not set"
+  log "this script should only be run as a git hook"
+  exit 1
 fi
 
-export PROJECT_PATH="$GIT_DIR"/..
-BUILD_SCRIPT=$PROJECT_PATH/scripts/build.sh
-if [ -x "$BUILD_SCRIPT" ]; then
-    echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-    echo "kardan: starting the build process..."
-    echo "kardan: waking up the ceiling kitten to fulfill your request..."
-    echo "kardan:      < Howdy, you heirless piece of human flesh! >"
-    echo "kardan: =^~^= ´"
-    echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+PROJECT_PATH="$GIT_DIR/.."
 
-		# Close stdandard output pipes and run $SCRIPT in background.
-		# Allows the remote to continue the build process independently.
-    exec $BUILD_SCRIPT 1>&- 2>&- &
-else
-		# Curse the human.
-    echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-    echo "kardan: error: build script not found"
-		echo "kardan: \$BUILD_SCRIPT = $BUILD_SCRIPT"
-    echo "kardan: the ceiling kitten will curse you for waking it up!"
-    echo "kardan:      < Grrr! I'll kill you in your sleep! >"
-    echo "kardan: =^~^= ´"
-    echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-    exit 2
+if [ ! -x "$BUILD_SCRIPT" ]; then
+  echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+  echo "error: build script not found"
+  echo "\$BUILD_SCRIPT = $BUILD_SCRIPT"
+  echo "the ceiling kitten will curse you for waking it up!"
+  echo "     < Grrr! I'll kill you in your sleep! >"
+  echo "=^~^= ´"
+  echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+  exit 2
 fi
+
+echo "=-=- Kardan Build System -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "starting the build process..."
+echo "waking up the ceiling kitten to fulfill your request..."
+echo "     < Howdy, you heirless piece of human flesh! >"
+echo "=^~^= ´"
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
+# Close stdandard output pipes and run `build` in background.
+# Allows the remote to continue the build process independently.
+build &
 
