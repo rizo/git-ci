@@ -44,11 +44,10 @@ echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 # Setup logging.
 TODAY=`date -u +"%Y-%m-%d"`
-mkdir -p $ROOT/log/git-ci
-STDOUT_LOG="$ROOT/build/log/kardan-${TODAY}-stdout.log"
-STDERR_LOG="$ROOT/build/log/kardan-${TODAY}-stderr.log"
-exec 1>> $STDOUT_LOG
-exec 2>> $STDERR_LOG
+mkdir -p $ROOT/log
+LOG_FILE="$ROOT/log/git-ci-${TODAY}.log"
+exec 1>> $LOG_FILE
+exec 2>> $LOG_FILE
 
 # Finnaly run the build function.
 build &
