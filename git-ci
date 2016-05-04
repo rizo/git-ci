@@ -1,0 +1,99 @@
+#!/bin/sh
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Git CI
+# Author: Rizo <rizo@odis.io>
+# Homepage: <https://github.com/rizo/git-ci>
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+POST_RECEIVE_CONTENT=$(cat <<'END_POST_RECEIVE'
+#!/bin/sh
+
+# This script starts the build process on post-receieve git hook.
+# The $GIT_DIR is set by Git before executing the hook.
+
+function log() {
+  echo "$(date -u +%Y-%m-%d_%TZ) git-ci: $1"
+}
+
+if [ -z $GIT_DIR ]; then
+  log "error: \$GIT_DIR is not set"
+  log "this script should only be run as a git hook"
+  exit 1
+else
+  ROOT="$GIT_DIR/.."
+fi
+
+function build {
+  log "building..."
+  START_TIME=`date +%s`
+  make -C $ROOT ci
+  END_TIME=`date +%s`
+  log "build finished, took $((END_TIME - START_TIME)) seconds"
+  log "     < Your disgusting human food is ready, sir! >"
+  log "=^~^= ´"
+}
+
+echo "=-=- Git CI =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "starting the build process..."
+echo "waking up the ceiling kitten to fulfill your request..."
+echo "     < Howdy, you hairless piece of human flesh! >"
+echo "=^~^= ´"
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
+# Setup logging.
+TODAY=`date -u +"%Y-%m-%d"`
+mkdir -p $ROOT/log/git-ci
+STDOUT_LOG="$ROOT/build/log/kardan-${TODAY}-stdout.log"
+STDERR_LOG="$ROOT/build/log/kardan-${TODAY}-stderr.log"
+exec 1>> $STDOUT_LOG
+exec 2>> $STDERR_LOG
+
+# Finnaly run the build function.
+build &
+
+END_POST_RECEIVE
+)
+
+# Check if we're inside a git repository.
+# Will print git's standard error message if not.
+if ! git log > /dev/null
+then
+  exit 2
+fi
+
+USAGE="usage: git ci enable|disable"
+
+if test "$#" -ne 1
+then
+  echo $USAGE
+  exit 1
+fi
+
+case "$1" in
+  enable)
+    git config --bool core.bare true \
+      && echo "$POST_RECEIVE_CONTENT" > '.git/hooks/post-receive' \
+      && chmod +x '.git/hooks/post-receive'
+    ;;
+
+  disable)
+    git config --bool core.bare false
+    if test -f '.git/hooks/post-receive'
+    then
+      rm '.git/hooks/post-receive'
+    fi
+    exit 0
+    ;;
+
+  -h | --help)
+    echo $USAGE
+    exit 0
+    ;;
+
+  *)
+    echo $USAGE
+    exit 1
+esac
+
