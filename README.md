@@ -15,7 +15,7 @@ The entire work is done in 33 LOC of shell code!
 Get the `git-ci` and install it somewhere in your `$PATH` with execution permissions.
 
 ```bash
-$ curl -LO https://raw.githubusercontent.com/rizo/git-ci/master/git-ci /usr/local/bin/
+$ curl -L https://raw.githubusercontent.com/rizo/git-ci/master/git-ci > /usr/local/bin/git-ci
 $ chmod +x /usr/local/bin/git-ci
 ```
 
