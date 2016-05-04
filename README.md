@@ -8,7 +8,7 @@ The build process is directly integrated with the git's ability to add action ho
 
 During the execution all the output is saved in `log/git-ci/` directory.
 
-The entire work is done in 33 LOC of shell code!
+The entire work is done in 99 LOC of shell code for the git plugin and the `post-receive` hook!
 
 ## Installation
 
