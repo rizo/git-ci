@@ -1,6 +1,6 @@
 # Git CI
 
-> Simple git CI plugin for automated builds, as Unixy as it can get.
+> Simple Git CI plugin for automated builds, as Unixy as it can get.
 
 The build process is directly integrated with the git's ability to add action hooks. In particular by running `git ci enable` a `post-receive` hook is enabled in your current repository, which will run by git whenever some clone pushes to the remote. The actual build process is delegated to `make`, the `make ci` action is invoked every time the hook is fired.
 
