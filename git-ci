@@ -57,9 +57,9 @@ END_POST_RECEIVE
 
 # Check if we're inside a git repository.
 # Will print git's standard error message if not.
-if ! git log > /dev/null
+if ! git rev-parse --is-inside-work-tree > /dev/null
 then
-  exit 2
+  exit 3
 fi
 
 USAGE="usage: git ci enable|disable"
@@ -70,18 +70,68 @@ then
   exit 1
 fi
 
+GIT_DIR=$(git rev-parse --git-dir)
+POST_RECEIVE_PATH="$GIT_DIR/hooks/post-receive"
+
+function is_enabled {
+  if test -s "$POST_RECEIVE_PATH"; then
+    if grep 'git-ci' "$POST_RECEIVE_PATH" > /dev/null; then
+      if test $(git config core.bare) == "true"; then
+        return 0
+      else
+        echo "git-ci: fatal: git-ci is installed but the repository is not bare" > /dev/stderr
+        exit 4
+      fi
+    else
+      echo "git-ci: fatal: unknown post-receive hook already installed" > /dev/stderr
+      exit 5
+    fi
+  else
+    return 1
+  fi
+}
+
+function enable {
+  git config --bool core.bare true && \
+    echo "$POST_RECEIVE_CONTENT" > "$POST_RECEIVE_PATH" && \
+    chmod +x "$POST_RECEIVE_PATH"
+  return 0
+}
+
+function disable {
+  git config --bool core.bare false
+  rm "$POST_RECEIVE_PATH"
+  return 0
+}
+
 case "$1" in
   enable)
-    git config --bool core.bare true \
-      && echo "$POST_RECEIVE_CONTENT" > '.git/hooks/post-receive' \
-      && chmod +x '.git/hooks/post-receive'
+    if is_enabled
+    then
+      echo "git-ci: error: already enabled" > /dev/stderr
+      exit 1
+    else
+      enable
+      echo 'git-ci: enabled, `make ci` will be called on updates' > /dev/stderr
+      exit 0
+    fi
     ;;
 
   disable)
-    git config --bool core.bare false
-    if test -f '.git/hooks/post-receive'
+    if ! is_enabled
     then
-      rm '.git/hooks/post-receive'
+      echo "git-ci: error: already disabled" > /dev/stderr
+      exit 2
+    else
+      disable
+      exit 0
+    fi
+    ;;
+
+  status)
+    if is_enabled
+    then echo "git-ci: enabled"
+    else echo "git-ci: disabled"
     fi
     exit 0
     ;;
