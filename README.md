@@ -1,14 +1,14 @@
 # Git CI
 
-> Simple git CI plugin for automated builds, as Unixy as it can get.
+> Simple Git CI plugin for automated builds, as Unixy as it can get.
 
 The build process is directly integrated with the git's ability to add action hooks. In particular by running `git ci enable` a `post-receive` hook is enabled in your current repository, which will run by git whenever some clone pushes to the remote. The actual build process is delegated to `make`, the `make ci` action is invoked every time the hook is fired.
 
-**TL;DR**: Add whatever you wish to the `make ci` action and it will run.
+**TL;DR**: Run `git ci enable` and add whatever you want to the `make ci` action and it will work.
 
-During the execution all the output is saved in `log/git-ci/` directory.
+During the execution all the output is saved in `log/` directory.
 
-The entire work is done in 33 LOC of shell code!
+The entire work is done in 99 LOC of shell code for the git plugin and the `post-receive` hook!
 
 ## Installation
 
